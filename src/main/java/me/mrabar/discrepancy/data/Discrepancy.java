@@ -8,27 +8,48 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.mrabar.discrepancy.utils;
+package me.mrabar.discrepancy.data;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+public class Discrepancy {
+  private final String groupId;
+  private final String artifactId;
+  private final String mainProjectVersion;
+  private final String importedProjectVersion;
+  private final String importedProjectScope;
 
-public class ProjectUtils {
-  public static List<File> scanProjects(
-      String projectScanDir
+  public Discrepancy(
+      String groupId,
+      String artifactId,
+      String mainProjectVersion,
+      String importedProjectVersion,
+      String importedProjectScope
   ) {
-    List<File> projects = new ArrayList<>();
-    File[] directories = new File(projectScanDir).listFiles(File::isDirectory);
-
-    for (File dir : directories) {
-      File pom = new File(dir, "pom.xml");
-      if (pom.exists()) {
-        projects.add(pom);
-      }
-    }
-
-    return projects;
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    this.mainProjectVersion = mainProjectVersion;
+    this.importedProjectVersion = importedProjectVersion;
+    this.importedProjectScope = importedProjectScope;
   }
+
+  public String getGroupId() {
+    return groupId;
+  }
+
+  public String getArtifactId() {
+    return artifactId;
+  }
+
+  public String getMainProjectVersion() {
+    return mainProjectVersion;
+  }
+
+  public String getImportedProjectVersion() {
+    return importedProjectVersion;
+  }
+
+  public String getImportedProjectScope() {
+    return importedProjectScope;
+  }
+
 
 }
