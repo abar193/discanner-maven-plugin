@@ -10,6 +10,11 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>Discrepancy Scanner Maven Plugin</name>
+    <description>
+        A plugin for reporting discrepancies between "provided" libraries across
+        several projects of an organization
+    </description>
+
     <url>https://github.com/abar193/discanner-maven-plugin</url>
 
     <properties>
@@ -57,4 +62,20 @@
         </pluginManagement>
     </build>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/abar193/discanner-maven-plugin/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+            <comments>A short and simple permissive license with conditions only requiring preservation of copyright and license notices.</comments>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/abar193/discanner-maven-plugin/issues</url>
+    </issueManagement>
+
+    <inceptionYear>2022</inceptionYear>
+    <organization><name>Opensource</name></organization>
 </project>
