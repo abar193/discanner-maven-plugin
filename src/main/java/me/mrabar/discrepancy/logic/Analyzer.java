@@ -22,6 +22,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +33,7 @@ public class Analyzer {
   private final Log log;
   private final MavenSession session;
   private final ProjectBuilder builder;
-  private final MavenProject mainProject;
+  private final Map<String, Dependency> mainDependencies;
   private final List<File> poms;
 
   private final ExecutorService executor;
@@ -41,28 +42,26 @@ public class Analyzer {
       Log log,
       MavenSession session,
       ProjectBuilder builder,
-      MavenProject mainProject,
+      Map<String, Dependency> mainDependencies,
       List<File> poms,
       int threads
   ) {
     this.log = log;
     this.session = session;
     this.builder = builder;
-    this.mainProject = mainProject;
+    this.mainDependencies = mainDependencies;
     this.poms = poms;
     executor = Executors.newFixedThreadPool(threads);
   }
 
   public List<DiscrepancyReport> analyze() {
     ProjectBuildingRequest request = session.getProjectBuildingRequest();
-    Map<String, Dependency> mainDependencies = DependencyUtils.dependencyMap(mainProject.getDependencies());
 
-    List<DiscrepancyReport> reports = poms.stream()
+    return poms.stream()
         .map(pom -> executor.submit(new CallablePomInspector(log, pom, builder, request, mainDependencies)))
         .map(this::getReport)
+        .filter(Objects::nonNull)
         .collect(Collectors.toList());
-
-    return reports;
   }
 
   private DiscrepancyReport getReport(Future<DiscrepancyReport> f) {

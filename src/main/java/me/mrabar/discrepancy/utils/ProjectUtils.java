@@ -10,17 +10,27 @@
 
 package me.mrabar.discrepancy.utils;
 
+import org.apache.maven.plugin.logging.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectUtils {
-  public static List<File> scanProjects(
-      String projectScanDir
-  ) {
-    List<File> projects = new ArrayList<>();
-    File[] directories = new File(projectScanDir).listFiles(File::isDirectory);
+  public static List<File> scanProjects(Log log, String projectScanDir) {
+    File scanDir = new File(projectScanDir);
+    if(!scanDir.exists()) {
+      log.error(projectScanDir + " not found!");
+      throw new RuntimeException(projectScanDir + " not found!");
+    }
 
+    File[] directories = new File(projectScanDir).listFiles(File::isDirectory);
+    if(directories == null || directories.length == 0) {
+      log.error("No project folders found in " + scanDir.getAbsolutePath());
+      throw new RuntimeException("No project folders found in " + scanDir.getAbsolutePath());
+    }
+
+    List<File> projects = new ArrayList<>();
     for (File dir : directories) {
       File pom = new File(dir, "pom.xml");
       if (pom.exists()) {

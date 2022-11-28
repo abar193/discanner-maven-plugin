@@ -14,8 +14,10 @@ import me.mrabar.discrepancy.data.Discrepancy;
 import me.mrabar.discrepancy.data.DiscrepancyReport;
 import me.mrabar.discrepancy.logic.Analyzer;
 import me.mrabar.discrepancy.utils.CsvWriter;
+import me.mrabar.discrepancy.utils.DependencyUtils;
 import me.mrabar.discrepancy.utils.ProjectUtils;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -29,6 +31,7 @@ import org.apache.maven.project.ProjectBuilder;
 import java.io.File;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Mojo(
     name = "scan",
@@ -51,13 +54,20 @@ public class DiscrepancyMojo extends AbstractMojo {
   private String csvReportLocation;
 
   public void execute() throws MojoExecutionException, MojoFailureException {
-
     MavenProject mainProject = (MavenProject) getPluginContext().get("project");
-    List<File> poms = ProjectUtils.scanProjects(projectScanDir);
-    Analyzer a = new Analyzer(getLog(), session, mavenProjectBuilder, mainProject, poms, threads);
+    List<File> poms = ProjectUtils.scanProjects(getLog(), projectScanDir);
 
+    Map<String, Dependency> dependencies = DependencyUtils.dependencyMap(mainProject.getDependencies());
+
+    if(dependencies.size() == 0) {
+      getLog().info(String.format("No dependencies found on project %s, nothing to do", mainProject.getName()));
+      return;
+    }
+
+    Analyzer a = new Analyzer(getLog(), session, mavenProjectBuilder, dependencies, poms, threads);
     List<DiscrepancyReport> reports = a.analyze();
-    reports.sort(Comparator.comparingInt(t -> t.getDiscrepancies().size()));
+
+    reports.sort(Comparator.comparing(DiscrepancyReport::getProjectName));
 
     for (DiscrepancyReport report : a.analyze()) {
       reportDiscrepancies(report);
