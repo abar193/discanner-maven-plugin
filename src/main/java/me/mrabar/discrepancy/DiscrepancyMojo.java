@@ -10,6 +10,7 @@
 
 package me.mrabar.discrepancy;
 
+import me.mrabar.discrepancy.data.ChildrenStrategy;
 import me.mrabar.discrepancy.data.Discrepancy;
 import me.mrabar.discrepancy.data.DiscrepancyReport;
 import me.mrabar.discrepancy.logic.Analyzer;
@@ -53,11 +54,15 @@ public class DiscrepancyMojo extends AbstractMojo {
   @Parameter(property = "csvReportLocation")
   private String csvReportLocation;
 
+  @Parameter(property = "childProjectsStrategy")
+  private String childProjectsStrategy;
+
   public void execute() throws MojoExecutionException, MojoFailureException {
     MavenProject mainProject = (MavenProject) getPluginContext().get("project");
     List<File> poms = ProjectUtils.scanProjects(getLog(), projectScanDir);
+    ChildrenStrategy strategy = ChildrenStrategy.of(childProjectsStrategy);
 
-    Map<String, Dependency> dependencies = DependencyUtils.dependencyMap(mainProject.getDependencies());
+    Map<String, Dependency> dependencies = DependencyUtils.dependencyMap(mainProject, strategy);
 
     if(dependencies.size() == 0) {
       getLog().info(String.format("No dependencies found on project %s, nothing to do", mainProject.getName()));
