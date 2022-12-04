@@ -79,7 +79,7 @@ public class DiscrepancyMojo extends AbstractMojo {
     }
 
     if (csvReportLocation != null) {
-      CsvWriter.reportCsv(csvReportLocation, reports);
+      CsvWriter.reportCsv(mainProject, csvReportLocation, reports);
     }
   }
 

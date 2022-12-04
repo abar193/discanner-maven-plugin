@@ -30,7 +30,7 @@ Usage
                     <!-- For parallel builds and faster results -->
                     <!-- <threads>4</threads> --> 
                     <!-- Uncomment if you want a csv report -->
-                    <!-- <csvReportLocation>out.csv</csvReportLocation> -->
+                    <!-- <csvReportLocation>./out/</csvReportLocation> -->
                 </configuration>
             </plugin>
         </plugins>
