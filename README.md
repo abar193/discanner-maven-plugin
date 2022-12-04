@@ -8,8 +8,7 @@ Compares dependencies from the project, where this plugin is involved, with
 dependencies from other projects on your local machine (if those projects are imported
 in your project).
 
-If you don't understand why it's needed or what is this for then you are a happy person 
-and I envy you.
+![Use case](docs/Discanner.png)
 
 Usage
 ---
@@ -41,3 +40,4 @@ Usage
 4. Report all the errors, bugs and crashes that you get, because it's extremely fresh project and it hasn't been 
    properly tested yet.
 
+ 
